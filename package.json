@@ -1,0 +1,43 @@
+{
+  "name": "knex-paginate",
+  "version": "1.0.0",
+  "description": "Extension of Knex's query builder with `paginate` method that will help with your pagination tasks.",
+  "main": "lib/index.js",
+  "types": "types.d.ts",
+  "files": [
+    "lib/*",
+    "types.d.ts"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felixmosh/knex-paginate.git"
+  },
+  "keywords": [
+    "knex",
+    "pagination",
+    "paginate"
+  ],
+  "author": "Felixmosh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felixmosh/knex-paginate/issues"
+  },
+  "homepage": "https://github.com/felixmosh/knex-paginate#readme",
+  "peerDependencies": {
+    "knex": ">= 0.19.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.12",
+    "@types/node": "^12.0.0",
+    "dotenv": "^8.0.0",
+    "jest": "^24.8.0",
+    "mysql": "^2.17.1",
+    "knex": "latest"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
