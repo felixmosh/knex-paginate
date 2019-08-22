@@ -69,7 +69,7 @@ const result = await knex('persons')
 | from | Counting ID of the first item of the current page. |
 | to | Counting ID of the last item of the current page. |
 
-**Returned if `isLengthAware == true` or `currentPage == 1 or isFromStart == true`:**
+**Returned if `isLengthAware == true` or `currentPage == 1` or `isFromStart == true`:**
 
 | Key | Value |
 | --- | --- |
