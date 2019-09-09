@@ -25,12 +25,21 @@ function getById(id) {
 
 describe('paginate', () => {
   beforeAll(async () => {
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     await db('persons').truncate();
-    await db('persons').insert([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(id => ({
+    await db('person_details').truncate();
+    await db('persons').insert(ids.map(id => ({
       id,
       name: `name-${id}`,
       email: `email-${id}`
     })));
+    await db('person_details').insert(ids.reduce((result, id) => result.concat(id % 2 === 0 ? [{
+      person_id: id,
+      city_id: 1
+    }, {
+      person_id: id,
+      city_id: 2
+    }] : []), []));
   });
 
   afterAll(() => db.destroy());
@@ -161,6 +170,18 @@ describe('paginate', () => {
         expect(result.pagination).toEqual(expect.objectContaining({
           total: 10
         }));
+      });
+
+      it('should count total as distinct column when group is provided', async () => {
+        const result = await db('persons')
+          .leftJoin('person_details', 'persons.id', 'person_details.person_id')
+          .where('persons.id', 2)
+          .groupBy('persons.id')
+          .paginate({
+            perPage: 2,
+          });
+
+        expect(result.pagination.total).toEqual(1);
       });
     });
   });
