@@ -174,6 +174,7 @@ describe('paginate', () => {
 
       it('should count total as distinct column when group is provided', async () => {
         const result = await db('persons')
+          .column('persons.id')
           .leftJoin('person_details', 'persons.id', 'person_details.person_id')
           .where('persons.id', 2)
           .groupBy('persons.id')
