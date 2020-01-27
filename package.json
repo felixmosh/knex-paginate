@@ -1,6 +1,6 @@
 {
   "name": "knex-paginate",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Extension of Knex's query builder with `paginate` method that will help with your pagination tasks.",
   "main": "lib/index.js",
   "types": "types.d.ts",
