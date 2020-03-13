@@ -9,7 +9,8 @@
     "types.d.ts"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -32,10 +33,11 @@
   "devDependencies": {
     "@types/jest": "^24.0.12",
     "@types/node": "^12.0.0",
-    "dotenv": "^8.0.0",
-    "jest": "^24.8.0",
-    "mysql": "^2.17.1",
-    "knex": "latest"
+    "auto-changelog": "^1.16.2",
+    "dotenv": "^8.2.0",
+    "jest": "^25.1.0",
+    "knex": "latest",
+    "mysql": "^2.18.1"
   },
   "jest": {
     "testEnvironment": "node"
