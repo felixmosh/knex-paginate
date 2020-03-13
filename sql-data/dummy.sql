@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS `person_details`;
 CREATE TABLE persons (
     id int PRIMARY KEY,
     name varchar(255),
-    email varchar(255) DEFAULT Null
+    email varchar(255) DEFAULT Null,
+    signup_date datetime NOT NULL
 );
 
 CREATE TABLE `person_details` (

@@ -28,10 +28,11 @@ describe('paginate', () => {
     const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     await db('persons').truncate();
     await db('person_details').truncate();
-    await db('persons').insert(ids.map(id => ({
+    await db('persons').insert(ids.map((id, i) => ({
       id,
       name: `name-${id}`,
-      email: `email-${id}`
+      email: `email-${id}`,
+      signup_date: new Date(1986, 3 + i, 26, 2, 20)
     })));
     await db('person_details').insert(ids.reduce((result, id) => result.concat(id % 2 === 0 ? [{
       person_id: id,
@@ -172,17 +173,30 @@ describe('paginate', () => {
         }));
       });
 
-      it('should count total as distinct column when group is provided', async () => {
-        const result = await db('persons')
-          .column('persons.id')
-          .leftJoin('person_details', 'persons.id', 'person_details.person_id')
-          .where('persons.id', 2)
-          .groupBy('persons.id')
-          .paginate({
-            perPage: 2,
-          });
+      describe('grouping', () => {
+        it('should count total as distinct column when group is provided', async () => {
+          const result = await db('persons')
+            .column('persons.id')
+            .leftJoin('person_details', 'persons.id', 'person_details.person_id')
+            .where('persons.id', 2)
+            .groupBy('persons.id')
+            .paginate({
+              perPage: 2,
+            });
 
-        expect(result.pagination.total).toEqual(1);
+          expect(result.pagination.total).toEqual(1);
+        });
+
+        it('should count total when group has raw statement', async () => {
+          const result = await db('persons')
+            .column(db.raw('Year(signup_date)'))
+            .groupBy(db.raw('Year(signup_date)'))
+            .paginate({
+              perPage: 2,
+            });
+
+          expect(result.pagination.total).toEqual(2);
+        });
       });
     });
   });
