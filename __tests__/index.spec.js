@@ -173,6 +173,21 @@ describe('paginate', () => {
         }));
       });
 
+      it('should clear order on the count query (fixes #7)', async () => {
+        const originalConsoleLog = console.log;
+        console.log = jest.fn();
+        await db('persons').orderBy('persons.id').debug(true).paginate({
+          perPage: 2,
+        });
+        const logStr = console.log.mock.calls[1][0]
+          .split('\n')
+          .filter(line => line.trim().startsWith('sql:'))
+          .pop();
+        console.log = originalConsoleLog;
+
+        expect(logStr).not.toContain('order by');
+      });
+
       describe('grouping', () => {
         it('should count total as distinct column when group is provided', async () => {
           const result = await db('persons')
