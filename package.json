@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "test": "jest",
-    "version": "auto-changelog -p && git add CHANGELOG.md"
+    "version": "auto-changelog -p && git add CHANGELOG.md",
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -37,9 +38,21 @@
     "dotenv": "^8.2.0",
     "jest": "^25.5.1",
     "knex": "^0.21.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "release-it": "^13.6.6"
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "release-it": {
+    "git": {
+      "changelog": "npx auto-changelog --stdout --commit-limit false -u --template https://raw.githubusercontent.com/release-it/release-it/master/templates/changelog-compact.hbs"
+    },
+    "hooks": {
+      "after:bump": "npx auto-changelog -p"
+    },
+    "github": {
+      "release": true
+    }
   }
 }
