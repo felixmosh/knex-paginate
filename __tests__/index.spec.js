@@ -8,6 +8,17 @@ if (process.env.CI !== 'true') {
   dotenv.config('../.env');
 }
 
+function fakeOracleColumnNameMapping(obj) {
+  if (!obj || ['boolean', 'number', 'string'].includes(typeof obj)) {
+    return obj;
+  }
+
+  return Object.entries(obj).reduce((result, [key, value]) => {
+    result[key === 'total' ? key.toUpperCase() : key.toLowerCase()] = value;
+    return result;
+  }, {});
+}
+
 const db = knex({
   client: 'mysql',
   connection: {
@@ -15,6 +26,9 @@ const db = knex({
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
+  },
+  postProcessResponse(result) {
+    return Array.isArray(result) ? result.map(row => fakeOracleColumnNameMapping(row)) : fakeOracleColumnNameMapping(result);
   }
 });
 
