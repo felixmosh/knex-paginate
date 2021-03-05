@@ -28,69 +28,99 @@ const db = knex({
     database: process.env.MYSQL_DATABASE,
   },
   postProcessResponse(result) {
-    return Array.isArray(result) ? result.map(row => fakeOracleColumnNameMapping(row)) : fakeOracleColumnNameMapping(result);
-  }
+    return Array.isArray(result)
+      ? result.map((row) => fakeOracleColumnNameMapping(row))
+      : fakeOracleColumnNameMapping(result);
+  },
 });
 
+async function regenerateTableDataWith(ids) {
+  await db('persons').truncate();
+  await db('person_details').truncate();
 
-function getById(id) {
-  return db('persons').where({ id }).first();
-}
-
-describe('paginate', () => {
-  beforeAll(async () => {
-    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    await db('persons').truncate();
-    await db('person_details').truncate();
-    await db('persons').insert(ids.map((id, i) => ({
+  await db('persons').insert(
+    ids.map((id, i) => ({
       id,
       name: `name-${id}`,
       email: `email-${id}`,
-      signup_date: new Date(1986, 3 + i, 26, 2, 20)
-    })));
-    await db('person_details').insert(ids.reduce((result, id) => result.concat(id % 2 === 0 ? [{
-      person_id: id,
-      city_id: 1
-    }, {
-      person_id: id,
-      city_id: 2
-    }] : []), []));
+      signup_date: new Date(1986, 3 + i, 26, 2, 20),
+    }))
+  );
+
+  await db('person_details').insert(
+    ids.reduce(
+      (result, id) =>
+        result.concat(
+          id % 2 === 0
+            ? [
+                {
+                  person_id: id,
+                  city_id: 1,
+                },
+                {
+                  person_id: id,
+                  city_id: 2,
+                },
+              ]
+            : []
+        ),
+      []
+    )
+  );
+}
+
+describe('paginate', () => {
+  let total;
+
+  beforeAll(async () => {
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    total = ids.length;
+
+    await regenerateTableDataWith(ids);
   });
 
   afterAll(() => db.destroy());
 
   describe('validation', () => {
-    ['perPage', 'currentPage'].forEach(param => {
+    ['perPage', 'currentPage'].forEach((param) => {
       it(`should throw if ${param} is not a number`, () => {
-        expect(() => db('persons').paginate({ [param]: 'x' }))
-          .toThrowError(`Paginate error: ${param} must be a number.`);
+        expect(() => db('persons').paginate({ [param]: 'x' })).toThrowError(
+          `Paginate error: ${param} must be a number.`
+        );
       });
     });
 
-    ['isFromStart', 'isLengthAware'].forEach(param => {
+    ['isFromStart', 'isLengthAware'].forEach((param) => {
       it(`should throw if ${param} is not a boolean`, () => {
-        expect(() => db('persons').paginate({ [param]: 'x' }))
-          .toThrowError(`Paginate error: ${param} must be a boolean.`);
+        expect(() => db('persons').paginate({ [param]: 'x' })).toThrowError(
+          `Paginate error: ${param} must be a boolean.`
+        );
       });
     });
   });
 
   describe('behaviour', () => {
     it('should paginate the data', async () => {
-      const result = await db('persons').paginate({ perPage: 2, currentPage: 2 });
-      expect(result.data).toHaveLength(2);
-      expect(result.pagination).toEqual(expect.objectContaining({
-        currentPage: 2,
-        perPage: 2,
-        from: 2,
-        to: 4
-      }));
+      const perPage = 2;
+      const currentPage = 2;
+
+      const result = await db('persons').paginate({ perPage, currentPage });
+
+      expect(result.data).toHaveLength(perPage);
+      expect(result.pagination).toEqual(
+        expect.objectContaining({
+          currentPage,
+          perPage,
+          from: 2,
+          to: 4,
+        })
+      );
     });
 
     it('should paginate the data with correct values', async () => {
       const result = await db('persons').pluck('id').paginate({ perPage: 2, currentPage: 2 });
-      expect(result.data).toHaveLength(2);
-      expect(result.data).toEqual(expect.arrayContaining([3, 4]));
+
+      expect(result.data).toEqual([3, 4]);
     });
 
     describe('totals', () => {
@@ -98,17 +128,19 @@ describe('paginate', () => {
         const result = await db('persons').paginate({
           perPage: 2,
           currentPage: 2,
-          isLengthAware: true
+          isLengthAware: true,
         });
 
-        expect(result.pagination).toEqual(expect.objectContaining({
-          currentPage: 2,
-          perPage: 2,
-          from: 2,
-          to: 4,
-          total: 10,
-          lastPage: 5
-        }));
+        expect(result.pagination).toEqual(
+          expect.objectContaining({
+            currentPage: 2,
+            perPage: 2,
+            from: 2,
+            to: 4,
+            total,
+            lastPage: 5,
+          })
+        );
       });
 
       it('should query totals when currentPage=1', async () => {
@@ -117,32 +149,36 @@ describe('paginate', () => {
           currentPage: 1,
         });
 
-        expect(result.pagination).toEqual(expect.objectContaining({
-          currentPage: 1,
-          perPage: 2,
-          from: 0,
-          to: 2,
-          total: 10,
-          lastPage: 5
-        }));
+        expect(result.pagination).toEqual(
+          expect.objectContaining({
+            currentPage: 1,
+            perPage: 2,
+            from: 0,
+            to: 2,
+            total,
+            lastPage: 5,
+          })
+        );
       });
 
       it('should query totals when isFromStart=true', async () => {
         const result = await db('persons').paginate({
           perPage: 2,
           currentPage: 2,
-          isFromStart: true
+          isFromStart: true,
         });
 
         expect(result.data).toHaveLength(4);
-        expect(result.pagination).toEqual(expect.objectContaining({
-          currentPage: 2,
-          perPage: 2,
-          from: 0,
-          to: 4,
-          total: 10,
-          lastPage: 5
-        }));
+        expect(result.pagination).toEqual(
+          expect.objectContaining({
+            currentPage: 2,
+            perPage: 2,
+            from: 0,
+            to: 4,
+            total,
+            lastPage: 5,
+          })
+        );
       });
 
       it('should not query totals otherwise', async () => {
@@ -159,22 +195,28 @@ describe('paginate', () => {
       it('should paginate with the same query', async () => {
         const result = await db('persons').whereBetween('id', [3, 8]).paginate({
           perPage: 2,
-          currentPage: 1
+          currentPage: 1,
         });
+
         expect(result.data).toHaveLength(2);
-        expect(result.pagination).toEqual(expect.objectContaining({
-          total: 6
-        }));
+        expect(result.pagination).toEqual(
+          expect.objectContaining({
+            total: 6,
+          })
+        );
       });
 
       it('should paginate with default currentPage of 1', async () => {
         const result = await db('persons').paginate({
           perPage: 2,
         });
+
         expect(result.data).toHaveLength(2);
-        expect(result.pagination).toEqual(expect.objectContaining({
-          currentPage: 1
-        }));
+        expect(result.pagination).toEqual(
+          expect.objectContaining({
+            currentPage: 1,
+          })
+        );
       });
 
       it('should count total with offset', async () => {
@@ -182,9 +224,11 @@ describe('paginate', () => {
           perPage: 2,
         });
         expect(result.data).toHaveLength(2);
-        expect(result.pagination).toEqual(expect.objectContaining({
-          total: 10
-        }));
+        expect(result.pagination).toEqual(
+          expect.objectContaining({
+            total,
+          })
+        );
       });
 
       it('should clear order on the count query (fixes #7)', async () => {
@@ -195,7 +239,7 @@ describe('paginate', () => {
         });
         const logStr = console.log.mock.calls[1][0]
           .split('\n')
-          .filter(line => line.trim().startsWith('sql:'))
+          .filter((line) => line.trim().startsWith('sql:'))
           .pop();
         console.log = originalConsoleLog;
 
