@@ -60,7 +60,7 @@ jobs:
           command: npm test
 
       - run:
-          name: Run Tests
+          name: Run Typings Tests
           command: npm run test:types
 
 workflows:
