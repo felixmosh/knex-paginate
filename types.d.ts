@@ -1,4 +1,4 @@
-import { QueryBuilder as KnexQB } from 'knex';
+import { Knex } from 'knex';
 
 interface IPaginateParams {
   perPage: number,
@@ -22,8 +22,10 @@ interface IPagination {
 }
 
 declare module 'knex' {
-  interface QueryBuilder {
-    paginate<TResult = any[]>(params: IPaginateParams): KnexQB<any, IWithPagination<TResult>>;
+  namespace Knex {
+    interface QueryBuilder {
+      paginate<TResult = any[]>(params: IPaginateParams): Knex.QueryBuilder<any, IWithPagination<TResult>>;
+    }
   }
 }
 

@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "test:types": "tsd",
     "version": "auto-changelog -p && git add CHANGELOG.md",
     "release": "release-it"
   },
@@ -29,7 +30,7 @@
   },
   "homepage": "https://github.com/felixmosh/knex-paginate#readme",
   "peerDependencies": {
-    "knex": ">= 0.19.1"
+    "knex": ">= 0.95.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
@@ -40,7 +41,8 @@
     "knex": "^0.95.1",
     "mysql": "^2.18.1",
     "prettier": "^2.2.1",
-    "release-it": "^14.4.1"
+    "release-it": "^14.4.1",
+    "tsd": "^0.14.0"
   },
   "jest": {
     "testEnvironment": "node"
@@ -54,6 +56,14 @@
     },
     "github": {
       "release": true
+    }
+  },
+  "tsd": {
+    "directory": "test-tsd",
+    "compilerOptions": {
+      "esModuleInterop": false,
+      "module": "commonjs",
+      "target": "ES2017"
     }
   }
 }
