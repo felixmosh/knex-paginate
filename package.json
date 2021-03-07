@@ -59,7 +59,7 @@
     }
   },
   "tsd": {
-    "directory": "test-tsd",
+    "directory": "__tests-tsd__",
     "compilerOptions": {
       "esModuleInterop": false,
       "module": "commonjs",
