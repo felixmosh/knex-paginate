@@ -59,6 +59,10 @@ jobs:
           name: Run Tests
           command: npm test
 
+      - run:
+          name: Run Typings Tests
+          command: npm run test:types
+
 workflows:
   version: 2
   build-deploy:
