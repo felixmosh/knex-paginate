@@ -12,7 +12,7 @@
     "test": "jest",
     "test:types": "tsd",
     "version": "auto-changelog -p && git add CHANGELOG.md",
-    "release": "release-it"
+    "release": "release-it --only-version"
   },
   "repository": {
     "type": "git",
