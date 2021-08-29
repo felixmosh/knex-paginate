@@ -1,5 +1,5 @@
 import { knex } from 'knex';
-import { expectType } from 'tsd';
+import { expectType, expectAssignable } from 'tsd';
 import '../types';
 import { ILengthAwarePagination, IBasePagination, IWithPagination } from '../types';
 
@@ -12,8 +12,17 @@ interface User {
 }
 
 (async () => {
-  expectType<IWithPagination<User[]>>(
-    await db('users').select('*').paginate<User[]>({
+  expectAssignable<IWithPagination<User[]>>(
+    await db<User[]>('users').column('*').paginate({
+      perPage: 10,
+      currentPage: 1,
+      isFromStart: true,
+      isLengthAware: false,
+    })
+  );
+
+  expectAssignable<IWithPagination<User[]>>(
+    await db('users').select<User[]>('*').paginate({
       perPage: 10,
       currentPage: 1,
       isFromStart: true,
@@ -49,6 +58,26 @@ interface User {
         isLengthAware: true,
       })
     ).pagination
+  );
+
+  expectType<ILengthAwarePagination>(
+    (
+      await db<User[]>('users').select('*').paginate({
+        perPage: 10,
+        currentPage: 1,
+        isLengthAware: true,
+      })
+    ).pagination
+  );
+
+  expectType<User[]>(
+    (
+      await db<User[]>('users').select('*').paginate({
+        perPage: 10,
+        currentPage: 1,
+        isLengthAware: true,
+      })
+    ).data
   );
 
   expectType<IBasePagination>(
