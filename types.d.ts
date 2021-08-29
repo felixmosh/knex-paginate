@@ -33,10 +33,10 @@ interface ILengthAwarePagination extends IBasePagination {
 
 declare module 'knex' {
   namespace Knex {
-    interface QueryBuilder {
-      paginate<TData = any[], TParams extends IPaginateParams = IPaginateParams>(
+    interface QueryBuilder<TRecord extends {} = any, TResult = any> {
+      paginate<TParams extends IPaginateParams = IPaginateParams>(
         params: Readonly<TParams>
-      ): Knex.QueryBuilder<any, IWithPagination<TData, TParams>>;
+      ): Knex.QueryBuilder<TRecord, IWithPagination<TRecord, TParams>>;
     }
   }
 }
