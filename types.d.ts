@@ -8,7 +8,7 @@ interface IPaginateParams {
 }
 
 interface IWithPagination<Data, TParams = IPaginateParams> {
-  data: Data;
+  data: Data[];
   pagination: IPagination<TParams>;
 }
 
