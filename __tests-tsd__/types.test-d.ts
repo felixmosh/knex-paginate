@@ -13,7 +13,7 @@ interface User {
 
 (async () => {
   expectAssignable<IWithPagination<User[]>>(
-    await db<User[]>('users').column('*').paginate({
+    await db<User>('users').column('*').paginate({
       perPage: 10,
       currentPage: 1,
       isFromStart: true,
@@ -22,7 +22,7 @@ interface User {
   );
 
   expectAssignable<IWithPagination<User[]>>(
-    await db('users').select<User[]>('*').paginate({
+    await db('users').select<User>('*').paginate({
       perPage: 10,
       currentPage: 1,
       isFromStart: true,
@@ -62,7 +62,7 @@ interface User {
 
   expectType<ILengthAwarePagination>(
     (
-      await db<User[]>('users').select('*').paginate({
+      await db<User>('users').select('*').paginate({
         perPage: 10,
         currentPage: 1,
         isLengthAware: true,
@@ -72,7 +72,7 @@ interface User {
 
   expectType<User[]>(
     (
-      await db<User[]>('users').select('*').paginate({
+      await db<User>('users').select('*').paginate({
         perPage: 10,
         currentPage: 1,
         isLengthAware: true,
