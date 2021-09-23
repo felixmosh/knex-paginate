@@ -70,7 +70,7 @@ interface User {
     ).pagination
   );
 
-  expectType<User>(
+  expectType<User[]>(
     (
       await db<User>('users').select('*').paginate({
         perPage: 10,
