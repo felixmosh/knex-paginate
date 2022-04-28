@@ -33,17 +33,17 @@
     "knex": ">= 0.95.0"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.4.1",
     "@types/node": "^16.6.1",
-    "auto-changelog": "^2.3.0",
-    "dotenv": "^10.0.0",
+    "auto-changelog": "^2.4.0",
+    "dotenv": "^16.0.0",
     "jest": "^27.0.6",
-    "knex": "^0.95.1",
+    "knex": "^2.0.0",
     "mysql": "^2.18.1",
-    "prettier": "^2.3.2",
-    "release-it": "^14.11.5",
+    "prettier": "^2.6.2",
+    "release-it": "^14.14.2",
     "stringcase": "^4.3.1",
-    "tsd": "^0.17.0"
+    "tsd": "^0.20.0"
   },
   "jest": {
     "testEnvironment": "node"

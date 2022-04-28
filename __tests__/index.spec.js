@@ -1,11 +1,11 @@
 const knex = require('knex');
-const dotenv = require('dotenv');
 const { attachPaginate } = require('../lib/index');
 const { snakecase } = require('stringcase');
 
 attachPaginate();
 
 if (process.env.CI !== 'true') {
+  const dotenv = require('dotenv');
   dotenv.config('../.env');
 }
 
