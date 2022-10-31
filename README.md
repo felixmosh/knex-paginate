@@ -1,7 +1,7 @@
 # Knex-paginate
 
 [![npm](https://img.shields.io/npm/v/knex-paginate.svg)](https://www.npmjs.com/package/knex-paginate)
-[![CircleCI](https://circleci.com/gh/felixmosh/knex-paginate.svg?style=svg)](https://circleci.com/gh/felixmosh/knex-paginate)
+[![CI](https://github.com/felixmosh/knex-paginate/actions/workflows/ci.yml/badge.svg)](https://github.com/felixmosh/knex-paginate/actions/workflows/ci.yml)
 
 Extension of Knex's query builder with `paginate` method that will help with your pagination tasks.
 
