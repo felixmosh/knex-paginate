@@ -25,20 +25,10 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'yarn'
 
-      - name: Shutdown Ubuntu MySQL (SUDO)
-        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please don't remove it
-
       - name: Set up MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7' # Optional, default value is "latest". The version of the MySQL
-          mysql database: 'test_db' # Optional, default value is "test". The specified database which will be create
-          mysql root password: 'root-passw0rd' # Required if "mysql user" is empty, default is empty. The root superuser password
-          mysql user: 'user' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-          mysql password: 'user-passw0rd'
-
-      - name: Fill demo data
-        run: mysql -h 127.0.0.1 -u user -puser-passw0rd test_db < sql-data/dummy.sql
+        run: |
+          mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE IF NOT EXISTS test_db;'
+          mysql -uroot -h127.0.0.1 -proot < ./sql-data/dummy.sql
 
       - name: Install Packages
         run: yarn install --frozen-lockfile
