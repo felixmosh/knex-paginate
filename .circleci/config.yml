@@ -9,7 +9,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:10
+      - image: circleci/node:16
         environment:
           MYSQL_DATABASE: test_db
           MYSQL_USER: user
@@ -51,6 +51,7 @@ jobs:
       - run:
           name: Install MySQL CLI
           command: |
+            sudo apt-get update
             sudo apt-get install mysql-client
             mysql -h 127.0.0.1 -u user -ppassw0rd test_db < sql-data/dummy.sql
             mysql -h 127.0.0.1 -u user -ppassw0rd --execute="SELECT * FROM test_db.persons"
