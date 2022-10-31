@@ -43,7 +43,7 @@ jobs:
         env:
           CI: true
           MYSQL_DATABASE: 'test_db'
-          MYSQL_PASSWORD: 'user-passw0rd'
-          MYSQL_USER: 'user'
+          MYSQL_PASSWORD: 'root'
+          MYSQL_USER: 'root'
           MYSQL_HOST: '127.0.0.1'
 
