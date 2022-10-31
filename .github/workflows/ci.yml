@@ -15,16 +15,6 @@ jobs:
         node: ['14.x', '16.x']
         os: [ubuntu-latest]
 
-    services:
-      # How to use MySQL
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-          - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -37,6 +27,7 @@ jobs:
 
       - name: Set up MySQL
         run: |
+          sudo systemctl start mysql
           mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE IF NOT EXISTS test_db;'
           mysql -uroot -h127.0.0.1 -proot < ./sql-data/dummy.sql
 
