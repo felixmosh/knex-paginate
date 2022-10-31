@@ -1,0 +1,59 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: ['14.x', '16.x']
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@3
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'yarn'
+
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please don't remove it
+
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7' # Optional, default value is "latest". The version of the MySQL
+          mysql database: 'test_db' # Optional, default value is "test". The specified database which will be create
+          mysql root password: 'root-passw0rd' # Required if "mysql user" is empty, default is empty. The root superuser password
+          mysql user: 'user' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+          mysql password: 'user-passw0rd'
+
+      - name: Fill demo data
+        run: mysql -h 127.0.0.1 -u user -puser-passw0rd test_db < sql-data/dummy.sql
+
+      - name: Install Packages
+        run: yarn install --frozen-lockfile
+        env:
+          CI: true
+
+      - name: Lint
+        run: yarn test:types
+
+      - name: Test
+        run: yarn test --ci --coverage --maxWorkers=2
+        env:
+          CI: true
+          MYSQL_DATABASE: 'test_db'
+          MYSQL_PASSWORD: 'user-passw0rd'
+          MYSQL_USER: 'user'
+          MYSQL_HOST: '127.0.0.1'
+
