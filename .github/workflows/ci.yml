@@ -29,7 +29,8 @@ jobs:
         run: |
           sudo systemctl start mysql
           mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE IF NOT EXISTS test_db;'
-          mysql -uroot -h127.0.0.1 -proot < ./sql-data/dummy.sql
+          mysql -uroot -h127.0.0.1 -proot test_db < ./sql-data/dummy.sql
+          mysql -uroot -h127.0.0.1 -proot -e 'SELECT * FROM test_db.persons;'
 
       - name: Install Packages
         run: yarn install --frozen-lockfile
