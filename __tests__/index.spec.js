@@ -201,6 +201,57 @@ describe('paginate', () => {
       });
     });
 
+    describe('prev / next page', () => {
+      it('should calculate prev page as null on first page', async () => {
+        const result = await db('persons').paginate({
+          currentPage: 1,
+          perPage: 2,
+        });
+
+        expect(result.pagination).toMatchObject({
+          current_page: 1,
+          prev_page: null,
+        });
+      });
+
+      it('should calculate prev / next page only when aware of length', async () => {
+        const result = await db('persons').paginate({
+          currentPage: 2,
+          perPage: 2,
+        });
+
+        expect(result.pagination).not.toHaveProperty('prev_page');
+        expect(result.pagination).not.toHaveProperty('next_page');
+      });
+
+      it('should calculate prev / next page', async () => {
+        const result = await db('persons').paginate({
+          currentPage: 2,
+          perPage: 2,
+          isFromStart: true,
+        });
+
+        expect(result.pagination).toMatchObject({
+          current_page: 2,
+          prev_page: 1,
+          next_page: 3,
+        });
+      });
+
+      it('should calculate next page as null on last page', async () => {
+        const result = await db('persons').paginate({
+          currentPage: 5,
+          perPage: 2,
+          isLengthAware: true,
+        });
+
+        expect(result.pagination).toMatchObject({
+          current_page: 5,
+          next_page: null,
+        });
+      });
+    });
+
     describe('edge cases', () => {
       it('should paginate with the same query', async () => {
         const result = await db('persons').whereBetween('id', [3, 8]).paginate({
