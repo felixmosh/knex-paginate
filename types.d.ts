@@ -29,6 +29,8 @@ interface IBasePagination {
 interface ILengthAwarePagination extends IBasePagination {
   total: number;
   lastPage: number;
+  prevPage: number;
+  nextPage: number;
 }
 
 declare module 'knex' {
