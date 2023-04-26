@@ -301,6 +301,18 @@ describe('paginate', () => {
         expect(logStr).not.toContain('order by');
       });
 
+      it('should support CTE (Common table expressions) statements', async () => {
+        const result = await db
+          .with('with_alias', (qb) => qb.select('*').from('persons').where('persons.id', 2))
+          .select('*')
+          .from('with_alias')
+          .paginate({
+            currentPage: 1,
+            perPage: 2,
+          });
+        expect(result.pagination.total).toEqual(1);
+      });
+
       describe('grouping', () => {
         it('should count total as distinct column when group is provided', async () => {
           const result = await db('persons')
