@@ -40,7 +40,7 @@
     "jest": "^29.2.2",
     "knex": "^2.3.0",
     "knex-mock-client": "^1.8.4",
-    "mysql2": "^2.3.3",
+    "mysql2": "^3.9.4",
     "prettier": "^2.7.1",
     "release-it": "^15.5.0",
     "stringcase": "^4.3.1",
