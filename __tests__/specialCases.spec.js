@@ -15,6 +15,10 @@ describe('special cases', () => {
     tracker = createTracker(db);
   });
 
+  afterEach(() => {
+    tracker.reset();
+  });
+
   it('should support TOTAL as uppercase', async () => {
     const total = 10;
     tracker.on.select('select count(*) as `total` from').responseOnce({ TOTAL: `${total}` });
@@ -41,5 +45,14 @@ describe('special cases', () => {
         total,
       },
     });
+  });
+
+  it('should default current page to 1 if lower given', async () => {
+    tracker.on.select('select count(*) as `total` from').responseOnce({ total: 0 });
+    tracker.on.select('select * from `tableName`').responseOnce([]);
+
+    await db('tableName').paginate({ currentPage: 0, perPage: 10 });
+
+    expect(tracker.history.select).toHaveLength(2); // normalizes currentPage to 1 will make the totals query as well
   });
 });
