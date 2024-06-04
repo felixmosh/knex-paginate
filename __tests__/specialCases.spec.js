@@ -1,5 +1,5 @@
 const knex = require('knex');
-const { getTracker, MockClient } = require('knex-mock-client');
+const { createTracker, MockClient } = require('knex-mock-client');
 const { attachPaginate } = require('../lib');
 attachPaginate();
 
@@ -12,7 +12,7 @@ describe('special cases', () => {
       dialect: 'mysql',
     });
 
-    tracker = getTracker();
+    tracker = createTracker(db);
   });
 
   it('should support TOTAL as uppercase', async () => {
