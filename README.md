@@ -34,6 +34,7 @@ interface IPaginateParams {
   currentPage: number,
   isFromStart?: boolean,
   isLengthAware?: boolean,
+  skipPagination?: boolean,
 }
 
 interface IWithPagination<T = any> {
@@ -55,6 +56,8 @@ interface IPagination {
 
 ### Example
 
+add-
+
 ```javascript
 const result = await knex('persons').paginate({ perPage: 10, currentPage: 2 });
 // result.data - will hold persons data
@@ -65,7 +68,7 @@ const result = await knex('persons').paginate({ perPage: 10, currentPage: 2 });
 
 | Key         | Value                                              |
 | ----------- | -------------------------------------------------- |
-| perPage     | Items per page. Use 0 to avoid pagination          |
+| perPage     | Items per page.                                    |
 | currentPage | Current page number.                               |
 | from        | Counting ID of the first item of the current page. |
 | to          | Counting ID of the last item of the current page.  |
