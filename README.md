@@ -73,7 +73,7 @@ const result = await knex('persons').paginate({ perPage: 10, currentPage: 2 });
 | from        | Counting ID of the first item of the current page. |
 | to          | Counting ID of the last item of the current page.  |
 
-**Returned if `isLengthAware == true` or `currentPage == 1` or `isFromStart == true` and `perPage > 0`:**
+**Returned if `isLengthAware == true` or `currentPage == 1` or `isFromStart == true` and `skipPagination != true`:**
 
 | Key      | Value                                     |
 | -------- | ----------------------------------------- |
