@@ -62,19 +62,20 @@ const result = await knex('persons')
 ```
 
 ## `pagination` object
-| Key | Value |
-| --- | --- |
-| perPage  | Items per page. |
-| currentPage | Current page number. |
-| from | Counting ID of the first item of the current page. |
-| to | Counting ID of the last item of the current page. |
 
-**Returned if `isLengthAware == true` or `currentPage == 1` or `isFromStart == true`:**
+| Key         | Value                                              |
+|-------------|----------------------------------------------------|
+| perPage     | Items per page.                                    |
+| currentPage | Current page number.                               |
+| from        | Counting ID of the first item of the current page. |
+| to          | Counting ID of the last item of the current page.  |
 
-| Key | Value |
-| --- | --- |
-| total | Total items that the full query contains. |
-| lastPage | Last page number. |
+If `isLengthAware == true` or `currentPage == 1` or `isFromStart == true` pagination object will contain `total` & `lastPage`:
+
+| Key      | Value                                     |
+|----------|-------------------------------------------|
+| total    | Total items that the full query contains. |
+| lastPage | Last page number.                         |
 
 
 This lib got inspiration from [`knex-paginator`](https://github.com/cannblw/knex-paginator).
