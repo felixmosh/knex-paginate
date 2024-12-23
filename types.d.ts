@@ -5,6 +5,7 @@ interface IPaginateParams {
   currentPage: number;
   isFromStart?: boolean;
   isLengthAware?: boolean;
+  disabled?: boolean;
 }
 
 interface IWithPagination<Data, TParams = IPaginateParams> {
@@ -12,10 +13,11 @@ interface IWithPagination<Data, TParams = IPaginateParams> {
   pagination: IPagination<TParams>;
 }
 
-type IPagination<TParams> = TParams extends
+type IPagination<TParams> = TParams extends (
   | { currentPage: 1 }
   | { isFromStart: true }
   | { isLengthAware: true }
+) & { disabled?: false }
   ? ILengthAwarePagination
   : IBasePagination;
 

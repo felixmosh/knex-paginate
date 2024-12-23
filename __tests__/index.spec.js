@@ -96,7 +96,7 @@ describe('paginate', () => {
       });
     });
 
-    ['isFromStart', 'isLengthAware'].forEach((param) => {
+    ['isFromStart', 'isLengthAware', 'disabled'].forEach((param) => {
       it(`should throw if ${param} is not a boolean`, () => {
         expect(() => db('persons').paginate({ [param]: 'x' })).toThrowError(
           `Paginate error: ${param} must be a boolean.`
@@ -339,6 +339,38 @@ describe('paginate', () => {
 
           expect(result.pagination.total).toEqual(2);
         });
+      });
+    });
+
+    describe('disabled mode', () => {
+      it('should fetch all data when disabled', async () => {
+        const perPage = 2;
+        const currentPage = 2;
+
+        const result = await db('persons').paginate({ perPage, currentPage, disabled: true });
+
+        expect(result.data).toHaveLength(total);
+        expect(result.pagination).toMatchObject({
+          current_page: 1,
+          per_page: total,
+          from: 0,
+          to: total,
+        });
+      });
+
+      it('should not fetch totals when disabled', async () => {
+        const perPage = 2;
+        const currentPage = 1;
+
+        const result = await db('persons').paginate({
+          perPage,
+          currentPage,
+          isFromStart: true,
+          disabled: true,
+        });
+
+        expect(result.data).toHaveLength(total);
+        expect(result.pagination).not.toHaveProperty('total', 'last_page');
       });
     });
   });

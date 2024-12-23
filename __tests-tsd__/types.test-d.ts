@@ -88,4 +88,15 @@ interface User {
       })
     ).pagination
   );
+
+  expectType<IBasePagination>(
+    (
+      await db('users').select('*').paginate({
+        perPage: 10,
+        currentPage: 1,
+        isFromStart: true,
+        disabled: true,
+      })
+    ).pagination
+  );
 })();

@@ -34,6 +34,7 @@ interface IPaginateParams {
   currentPage: number,
   isFromStart?: boolean,
   isLengthAware?: boolean,
+  disabled?: boolean,
 }
 
 interface IWithPagination<T = any> {
@@ -62,6 +63,14 @@ const result = await knex('persons')
 // result.data - will hold persons data
 // result.pagination - will hold pagination object
 ```
+## paginate options
+
+| Key                         | type    | Value                                                                |
+|-----------------------------|---------|----------------------------------------------------------------------|
+| perPage                     | number  | Items per page.                                                      |
+| currentPage                 | number  | The current page                                                     |
+| isFromStart / isLengthAware | boolean | Indicates if the returned list should get all pages till currentPage |
+| disabled                    | boolean | Disables the pagination functionality, returns all relevant rows     |
 
 ## `pagination` object
 
@@ -72,12 +81,14 @@ const result = await knex('persons')
 | from        | Counting ID of the first item of the current page. |
 | to          | Counting ID of the last item of the current page.  |
 
-If `isLengthAware == true` or `currentPage == 1` or `isFromStart == true` pagination object will contain `total` & `lastPage`:
+If `isLengthAware == true` or `currentPage == 1` or `isFromStart == true` pagination object will contain additional fields:
 
-| Key      | Value                                     |
-|----------|-------------------------------------------|
-| total    | Total items that the full query contains. |
-| lastPage | Last page number.                         |
+| Key      | Value                                               |
+|----------|-----------------------------------------------------|
+| total    | Total items that the full query contains.           |
+| lastPage | Last page number.                                   |
+| nextPage | The next page or `null` when at the last page.      |
+| prevPage | The previous page or `null` when at the first page. |
 
 
 This lib got inspiration from [`knex-paginator`](https://github.com/cannblw/knex-paginator).
