@@ -44,6 +44,8 @@ interface IWithPagination<T = any> {
 interface IPagination {
   total?: number;
   lastPage?: number;
+  prevPage?: number | null;
+  nextPage?: number | null;
   currentPage: number;
   perPage: number;
   from: number;
