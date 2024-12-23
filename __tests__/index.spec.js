@@ -18,10 +18,12 @@ function fakeOracleColumnNameMapping(obj) {
     return obj;
   }
 
-  return Object.entries(obj).reduce((result, [key, value]) => {
-    result[key === 'total' && !isPagination(obj) ? key.toUpperCase() : snakecase(key)] = value;
-    return result;
-  }, {});
+  return Object.fromEntries(
+    Object.entries(obj).map(([key, value]) => {
+      const newKey = key === 'total' && !isPagination(obj) ? key.toUpperCase() : snakecase(key);
+      return [newKey, value];
+    })
+  );
 }
 
 const db = knex({
